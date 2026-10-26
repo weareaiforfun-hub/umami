@@ -3,7 +3,7 @@ import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { NavMenu } from '@/components/common/NavMenu';
 import { useMessages, useNavigation } from '@/components/hooks';
-import { ArrowLeft, Globe, ShieldCheck, User, Users } from '@/components/icons';
+import { ArrowLeft, Globe, Mail, ShieldCheck, User, Users } from '@/components/icons';
 
 export function AdminNav({ onItemClick }: { onItemClick?: () => void }) {
   const { t, labels } = useMessages();
@@ -36,6 +36,12 @@ export function AdminNav({ onItemClick }: { onItemClick?: () => void }) {
           label: t(labels.security),
           path: '/admin/security',
           icon: <ShieldCheck />,
+        },
+        {
+          id: 'newsletter',
+          label: 'Newsletter',
+          path: '/admin/newsletter',
+          icon: <Mail />,
         },
       ],
     },
