@@ -4,6 +4,7 @@ import {
   Clock,
   Eye,
   Flame,
+  HeartPulse,
   Sheet,
   Tag,
   User,
@@ -83,6 +84,12 @@ export function useWebsiteNavItems(websiteId: string) {
     {
       label: t(labels.behavior),
       items: [
+        {
+          id: 'engagement',
+          label: 'Engagement',
+          icon: <HeartPulse />,
+          path: renderPath('/engagement'),
+        },
         {
           id: 'goals',
           label: t(labels.goals),
