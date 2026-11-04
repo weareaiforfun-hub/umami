@@ -48,7 +48,7 @@ export interface WebsiteEngagement {
   clicks: { event: string; label: string; total: number; visitors: number }[];
   rage: { label: string; path: string; total: number }[];
   errors: { message: string; path: string; total: number }[];
-  failures: { feature: string; status: number; total: number }[];
+  failures: { feature: string; action: string; status: number; total: number }[];
 }
 
 const FUNCTION_NAME = 'getWebsiteEngagement';
@@ -76,7 +76,8 @@ const EVENTS = `
       ${prop('action')} as action,
       ${prop('ok')} as ok,
       ${prop('status', 'number_value')}::int as status,
-      ${prop('trigger')} as trig,
+      -- A status check is the page asking the backend what's available, whatever the visitor was doing.
+      case when ${prop('action')} = 'status' then 'auto' else ${prop('trigger')} end as trig,
       ${prop('message')} as message
     from website_event
     left join event_data on event_data.website_event_id = website_event.event_id
@@ -251,9 +252,9 @@ async function relationalQuery(
       `),
       q(`
       with ${EVENTS}
-      select feature, coalesce(status, 0) as status, count(*)::int as "total"
+      select feature, coalesce(action, '') as action, coalesce(status, 0) as status, count(*)::int as "total"
       from ev where event_name = 'feature-use' and ok = 'false'
-      group by feature, status order by 3 desc limit 15
+      group by feature, action, status order by 4 desc limit 15
       `),
     ]);
 

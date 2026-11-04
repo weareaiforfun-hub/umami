@@ -2,6 +2,7 @@
 import { Column } from '@umami/react-zen';
 import { LinksDataTable } from '@/app/(main)/links/LinksDataTable';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useLoginQuery, useMessages, useNavigation, useTeamMembersQuery } from '@/components/hooks';
@@ -26,6 +27,7 @@ export function LinksPage() {
         <PageHeader title={t(labels.links)}>
           {showActions && <LinkAddButton teamId={teamId} />}
         </PageHeader>
+        <PageGuide />
         <Panel>
           <LinksDataTable showActions={showActions} />
         </Panel>

@@ -1,6 +1,7 @@
 'use client';
 import { Column } from '@umami/react-zen';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useLoginQuery, useMessages, useNavigation, useTeamMembersQuery } from '@/components/hooks';
@@ -26,6 +27,7 @@ export function PixelsPage() {
         <PageHeader title={t(labels.pixels)}>
           {showActions && <PixelAddButton teamId={teamId} />}
         </PageHeader>
+        <PageGuide />
         <Panel>
           <PixelsDataTable showActions={showActions} />
         </Panel>

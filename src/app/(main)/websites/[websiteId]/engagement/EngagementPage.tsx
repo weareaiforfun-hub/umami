@@ -21,6 +21,48 @@ const fmtTime = (s: number) => {
 const BUCKETS = ['<3s', '3-15s', '15-60s', '1-3m', '3-10m', '10m+'];
 const MIN_SAMPLE = 5;
 
+// Plain words for the backend calls, so the Features table reads without knowing the code.
+const FEATURE_NOTES: Record<string, string> = {
+  'auth-signup': 'Someone started using an account: on MuseumHop, starting or joining a night',
+  'auth-token': 'Someone signed in, for example with a personal link',
+  'auth-otp': 'A sign-in code or link was requested',
+  'museumhop-email · status':
+    'Silent check when the app opens: is email working? Not a visitor action',
+  'museumhop-email · send': 'A visitor emailed themselves their personal link',
+  'museumhop-email · recover': 'A visitor asked for a new link by email',
+};
+
+const featureName = (feature: string, action?: string) =>
+  action ? `${feature} · ${action}` : feature;
+
+const FAILURE_NOTES: Record<number, string> = {
+  0: 'The call never finished: the visitor left or lost signal, or a blocker stopped it',
+  400: 'The site rejected the request, for example a mistyped email address',
+  401: 'The visitor needs to sign in again',
+  403: 'The visitor isn’t allowed to do this',
+  429: 'Too many tries in a short time',
+  500: 'Something broke on the server: worth checking',
+  503: 'The service isn’t available or set up',
+};
+
+const failureNote = (status: number) =>
+  FAILURE_NOTES[status] ??
+  (status >= 500 ? 'Something broke on the server' : 'The request was refused');
+
+// A likely cause for the errors seen most often; most come from the visitor's own browser.
+function errorNote(message: string) {
+  if (/^Script error/i.test(message)) {
+    return 'The browser hides the details. It could be an extension or a script from another site';
+  }
+  if (/__firefox__|DarkReader|ethereum|webkit\.messageHandlers|instagram|fbq/i.test(message)) {
+    return 'From the visitor’s browser or an extension, not your site';
+  }
+  if (/NotFoundError|removeChild|insertBefore/i.test(message)) {
+    return 'Possibly page translation clashing with the site';
+  }
+  return 'Unknown: check it if the count grows';
+}
+
 const Stat = ({ label, value, note }: { label: string; value: string; note?: string }) => (
   <Column gap="1" minWidth="150px">
     <Text size="sm" color="muted">
@@ -178,12 +220,12 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
                 <Stat
                   label="Engaged visits"
                   value={fmtPct(s.engagedVisits, s.visits)}
-                  note={`${s.engagedVisits} of ${s.visits} visits`}
+                  note={`${s.engagedVisits} of ${s.visits} visits stayed 15s+, clicked, or opened a second page`}
                 />
                 <Stat
                   label="Median active time"
                   value={fmtTime(s.medianEngagedSeconds)}
-                  note={`average ${fmtTime(s.avgEngagedSeconds)}`}
+                  note={`the middle visitor; the average is ${fmtTime(s.avgEngagedSeconds)}, pulled up by a few long visits`}
                 />
                 <Stat
                   label="Interacted"
@@ -193,22 +235,22 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
                 <Stat
                   label="Read to 75%"
                   value={fmtPct(s.deepScrollVisits, s.visits)}
-                  note="of visits"
+                  note="scrolled three quarters down; means little for a map app, more for articles"
                 />
                 <Stat
                   label="Used a feature"
                   value={fmtPct(s.convertedVisits, s.visits)}
-                  note="successful, user-started"
+                  note="worked, and the visitor started it; silent checks don't count"
                 />
                 <Stat
                   label="Returning visitors"
                   value={fmtPct(s.returningVisitors, s.visitors)}
-                  note={`${s.returningVisitors} of ${s.visitors}`}
+                  note={`${s.returningVisitors} of ${s.visitors} came back within the period shown`}
                 />
                 <Stat
                   label="Friction"
                   value={`${s.rageClicks + s.jsErrors}`}
-                  note={`${s.rageClicks} rage click${s.rageClicks === 1 ? '' : 's'}, ${s.jsErrors} error${s.jsErrors === 1 ? '' : 's'}`}
+                  note={`${s.rageClicks} rage click${s.rageClicks === 1 ? '' : 's'}, ${s.jsErrors} error${s.jsErrors === 1 ? '' : 's'}; many are harmless, see Friction below`}
                 />
               </Row>
             </Panel>
@@ -230,7 +272,7 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
             <Grid columns={{ base: '1fr', lg: '1fr 1fr' }} gap="3">
               <Section
                 title="Active time per visit"
-                description="Time with the tab visible and the visitor scrolling, typing or moving the pointer."
+                description="How long people really used the site: only time with the tab open and the visitor scrolling, typing or moving. Under 3 seconds usually means they left straight away, or that their phone didn't report the time."
               >
                 <Column gap="2">
                   {BUCKETS.map(bucket => {
@@ -252,7 +294,7 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
 
               <Section
                 title="Traffic quality by source"
-                description="Which referrers bring visitors who stay and act."
+                description="Where visitors came from, and which sources bring people who stay. Direct means unknown: typed links and often WhatsApp or email. Names like com.reddit.frontpage are phone apps (the Reddit app). Small numbers say little."
               >
                 {data.sources.length ? (
                   <DataTable data={data.sources}>
@@ -284,7 +326,7 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
 
             <Section
               title="Pages: attention, not just views"
-              description="Active time per view, how many visits read to 75% of the page, and interactions per view."
+              description="For each page: active time per view, how many visits scrolled three quarters down, and clicks per view. A one-page app like MuseumHop shows a single row."
             >
               {data.pages.length ? (
                 <DataTable data={data.pages}>
@@ -316,13 +358,18 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
 
             <Section
               title="Features"
-              description="Backend calls the site makes (AI tools, sign-ups, subscriptions): how often, by how many visitors, success rate and typical wait. Auto means the page called it without a click."
+              description="Not every feature of the site: only calls to the server, such as sign-ups, emails or AI tools. Things that happen on the visitor's own device (map, routes) are under What people click. Success is the share that worked, Median wait the typical time it took, and Auto how many ran by themselves, without the visitor doing anything."
             >
               {data.features.length ? (
                 <DataTable data={data.features}>
                   <DataColumn id="feature" label="Feature" width="minmax(160px, 2fr)">
                     {(row: WebsiteEngagement['features'][number]) => (
-                      <Cell value={row.action ? `${row.feature} · ${row.action}` : row.feature} />
+                      <Cell value={featureName(row.feature, row.action)} />
+                    )}
+                  </DataColumn>
+                  <DataColumn id="meaning" label="What it is" width="minmax(200px, 3fr)">
+                    {(row: WebsiteEngagement['features'][number]) => (
+                      <Cell value={FEATURE_NOTES[featureName(row.feature, row.action)] ?? ''} />
                     )}
                   </DataColumn>
                   <DataColumn id="uses" label="Uses" width="70px" align="end" />
@@ -346,7 +393,7 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
 
             <Section
               title="What people click"
-              description="Buttons, links and other interactions, by label."
+              description="What people did. Label is the button or link; Event is the kind of action: button-click, outbound-click (a link to another site), view (a tab), panel (a side panel) or a named action such as details-open or stop-add. Count is the total, Visitors how many people did it."
             >
               {data.clicks.length ? (
                 <DataTable data={data.clicks}>
@@ -366,7 +413,7 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
 
             <Section
               title="Friction"
-              description="Rage clicks (three or more clicks on the same thing within a second), front-end errors and failed feature calls."
+              description="Possible annoyances, not all real problems. Rage clicks are three or more clicks on the same thing within a second: on a Next button that's usually just fast tapping, on anything else it can mean the button seemed not to work. Errors are things that went wrong in the visitor's browser; many come from their extensions. Failed features are server calls that didn't work."
             >
               {data.rage.length + data.errors.length + data.failures.length === 0 ? (
                 <Empty>No friction recorded in this period.</Empty>
@@ -388,6 +435,11 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
                       <DataColumn id="message" label="Error" width="minmax(200px, 3fr)">
                         {(row: WebsiteEngagement['errors'][number]) => <Cell value={row.message} />}
                       </DataColumn>
+                      <DataColumn id="cause" label="Likely cause" width="minmax(200px, 3fr)">
+                        {(row: WebsiteEngagement['errors'][number]) => (
+                          <Cell value={errorNote(row.message)} />
+                        )}
+                      </DataColumn>
                       <DataColumn id="path" label="Page" width="minmax(120px, 1fr)">
                         {(row: WebsiteEngagement['errors'][number]) => <Cell value={row.path} />}
                       </DataColumn>
@@ -398,7 +450,12 @@ export function EngagementPage({ websiteId }: { websiteId: string }) {
                     <DataTable data={data.failures}>
                       <DataColumn id="feature" label="Failed feature" width="minmax(160px, 2fr)">
                         {(row: WebsiteEngagement['failures'][number]) => (
-                          <Cell value={row.feature} />
+                          <Cell value={featureName(row.feature, row.action)} />
+                        )}
+                      </DataColumn>
+                      <DataColumn id="cause" label="What it means" width="minmax(200px, 3fr)">
+                        {(row: WebsiteEngagement['failures'][number]) => (
+                          <Cell value={failureNote(row.status)} />
                         )}
                       </DataColumn>
                       <DataColumn id="status" label="Status" width="80px" align="end">

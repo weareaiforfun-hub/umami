@@ -2,6 +2,7 @@
 import { Column } from '@umami/react-zen';
 import { BoardProvider } from '@/app/(main)/boards/BoardProvider';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { BoardControls } from './BoardControls';
 import { BoardViewBody } from './BoardViewBody';
 import { BoardViewHeader } from './BoardViewHeader';
@@ -22,6 +23,7 @@ export function BoardViewPage({
       <PageBody>
         <Column>
           <BoardViewHeader showActions={showActions} showEntityBadge={showEntityBadges} />
+          <PageGuide />
           {showControls && <BoardControls />}
           <BoardViewBody showEntityBadges={showEntityBadges} />
         </Column>

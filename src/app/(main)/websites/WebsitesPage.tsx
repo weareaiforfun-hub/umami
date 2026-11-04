@@ -1,6 +1,7 @@
 'use client';
 import { Column } from '@umami/react-zen';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useLoginQuery, useMessages, useNavigation, useTeamMembersQuery } from '@/components/hooks';
@@ -26,6 +27,7 @@ export function WebsitesPage() {
         <PageHeader title={t(labels.websites)}>
           {showActions && <WebsiteAddButton teamId={teamId} />}
         </PageHeader>
+        <PageGuide />
         <Panel>
           <WebsitesDataTable teamId={teamId} showActions={showActions} />
         </Panel>

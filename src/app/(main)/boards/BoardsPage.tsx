@@ -1,6 +1,7 @@
 'use client';
 import { Column } from '@umami/react-zen';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useMessages } from '@/components/hooks';
@@ -16,6 +17,7 @@ export function BoardsPage() {
         <PageHeader title={t(labels.boards)}>
           <BoardAddButton />
         </PageHeader>
+        <PageGuide />
         <Panel>
           <BoardsDataTable />
         </Panel>

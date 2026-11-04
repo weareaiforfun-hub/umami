@@ -2,6 +2,7 @@
 import { Button, Column, Grid, Heading, Row, Text } from '@umami/react-zen';
 import { useState } from 'react';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useApi } from '@/components/hooks';
@@ -294,6 +295,7 @@ export function AdminMuseumHopPage() {
           ))}
         </Row>
       </PageHeader>
+      <PageGuide />
 
       <LoadingPanel data={data} error={error} isLoading={isLoading}>
         {u && (
@@ -308,7 +310,7 @@ export function AdminMuseumHopPage() {
 
             <Section
               title="Visitors"
-              description={`Last ${days} days. Cookie-free: a visitor is one browser per day-salted id, so returning counts are approximate.`}
+              description={`Last ${days} days. No cookies are used, so a visitor is a browser and network seen together: returning counts are rough, and the same person on two devices counts twice.`}
             >
               <Row gap="6" wrap="wrap">
                 <Stat label="Visitors (MuseumHop)" value={site(HOP)?.visitors ?? 0} />
@@ -428,7 +430,7 @@ export function AdminMuseumHopPage() {
 
             <Section
               title="Problems"
-              description="Front-end errors visitors ran into (MuseumHop, this period)."
+              description="Things that went wrong in visitors’ browsers (MuseumHop, this period). Many come from their extensions, not the app."
             >
               {u.errors.length ? (
                 <Bars rows={u.errors.map(e => ({ label: e.message, value: e.total }))} />
