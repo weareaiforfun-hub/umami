@@ -5,6 +5,7 @@ import { BoardControls } from '@/app/(main)/boards/[boardId]/BoardControls';
 import { BoardViewBody } from '@/app/(main)/boards/[boardId]/BoardViewBody';
 import { Empty } from '@/components/common/Empty';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { useBoard, useMessages, useNavigation } from '@/components/hooks';
 import { DashboardProvider } from './DashboardProvider';
 import { DashboardViewHeader } from './DashboardViewHeader';
@@ -40,6 +41,7 @@ export function DashboardViewPage() {
       <PageBody>
         <Column>
           <DashboardViewHeader />
+          <PageGuide />
           <BoardControls />
           <DashboardContent />
         </Column>

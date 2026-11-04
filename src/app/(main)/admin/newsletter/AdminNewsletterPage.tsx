@@ -1,6 +1,7 @@
 'use client';
 import { Button, Column, DataColumn, DataTable, Icon, Row, Text } from '@umami/react-zen';
 import { LoadingPanel } from '@/components/common/LoadingPanel';
+import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
 import { useApi } from '@/components/hooks';
@@ -100,6 +101,7 @@ export function AdminNewsletterPage() {
           <Text>Download CSV</Text>
         </Button>
       </PageHeader>
+      <PageGuide />
 
       {data && !data.configured ? (
         <Panel>

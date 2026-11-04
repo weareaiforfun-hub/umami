@@ -1,4 +1,4 @@
-import { Grid, Heading, Row, Tab, TabList, TabPanel, Tabs } from '@umami/react-zen';
+import { Grid, Heading, Row, Tab, TabList, TabPanel, Tabs, Text } from '@umami/react-zen';
 import { GridRow } from '@/components/common/GridRow';
 import { Panel } from '@/components/common/Panel';
 import { useMessages, useMobile } from '@/components/hooks';
@@ -23,6 +23,12 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
       <GridRow layout="two" {...rowProps}>
         <Panel>
           <Heading size="2xl">{t(labels.pages)}</Heading>
+          <Text color="muted">
+            Which pages people saw. Path is the page's address after the site name, and / is the
+            home page, so a one-page app like MuseumHop only ever shows /. URL also includes extras
+            such as ?utm_source=reddit. Entry page is where visits started; Exit page is where they
+            ended.
+          </Text>
           <Tabs>
             <TabList>
               <Tab id="path">{t(labels.path)}</Tab>
@@ -46,6 +52,11 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
         </Panel>
         <Panel>
           <Heading size="2xl">{t(labels.sources)}</Heading>
+          <Text color="muted">
+            Where visitors came from. Referrers are the exact sites; Channels group them into types
+            such as social, search or direct. Direct means unknown: typed links and often WhatsApp
+            or email.
+          </Text>
           <Tabs>
             <TabList>
               <Tab id="referrer">{t(labels.referrers)}</Tab>
@@ -64,6 +75,10 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
       <GridRow layout="two" {...rowProps}>
         <Panel>
           <Heading size="2xl">{t(labels.environment)}</Heading>
+          <Text color="muted">
+            What people used: their browser, operating system (OS, such as iOS or Android) and
+            device type. Useful for knowing what to test on.
+          </Text>
           <Tabs>
             <TabList>
               <Tab id="browser">{t(labels.browsers)}</Tab>
@@ -84,6 +99,10 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
 
         <Panel>
           <Heading size="2xl">{t(labels.location)}</Heading>
+          <Text color="muted">
+            Where visitors were, estimated from their internet connection. Countries are fairly
+            reliable; regions and cities are rougher.
+          </Text>
           <Tabs>
             <TabList>
               <Tab id="country">{t(labels.countries)}</Tab>
@@ -105,11 +124,17 @@ export function WebsitePanels({ websiteId }: { websiteId: string }) {
 
       <GridRow layout="two-one" {...rowProps}>
         <Panel paddingX="0" paddingY="0" style={{ gridColumn: isMobile ? 'span 1' : 'span 2' }}>
+          <Text color="muted" style={{ padding: 16 }}>
+            Visitors by country: darker countries had more visitors.
+          </Text>
           <WorldMap websiteId={websiteId} />
         </Panel>
 
         <Panel>
           <Heading size="2xl">{t(labels.traffic)}</Heading>
+          <Text color="muted">
+            The busiest days and hours of the week, shown with bigger marks for more visitors.
+          </Text>
           <Row border="bottom" marginBottom="4" />
           <WeeklyTraffic websiteId={websiteId} />
         </Panel>

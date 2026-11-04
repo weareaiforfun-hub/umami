@@ -20,7 +20,10 @@ export function WebsitePage({ websiteId }: { websiteId: string }) {
     <Column gap>
       <WebsiteControls websiteId={websiteId} allowBounceFilter={true} />
       <WebsiteMetricsBar websiteId={websiteId} showChange={true} />
-      <Panel minHeight="520px">
+      <Panel
+        minHeight="520px"
+        description="Visitors and views over time. Peaks show when something brought people in, such as a post going live."
+      >
         <Row justifyContent="end">
           <UnitFilter />
         </Row>

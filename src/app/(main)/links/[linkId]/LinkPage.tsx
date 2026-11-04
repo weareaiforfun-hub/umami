@@ -8,6 +8,7 @@ import { LinkProvider } from '@/app/(main)/links/LinkProvider';
 import { ExpandedViewModal } from '@/app/(main)/websites/[websiteId]/ExpandedViewModal';
 import { WebsiteChart } from '@/app/(main)/websites/[websiteId]/WebsiteChart';
 import { PageBody } from '@/components/common/PageBody';
+import { PageGuide } from '@/components/common/PageGuide';
 import { Panel } from '@/components/common/Panel';
 
 const excludedIds = ['path', 'fullPath', 'entry', 'exit', 'title', 'language', 'screen', 'event'];
@@ -25,6 +26,7 @@ export function LinkPage({
         <Column margin="2">
           <PageBody gap>
             <LinkHeader showActions={showHeaderActions} />
+            <PageGuide />
             <LinkControls linkId={linkId} />
             <LinkMetricsBar linkId={linkId} showChange={true} />
             <Panel>
