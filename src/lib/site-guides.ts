@@ -55,8 +55,8 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
       },
       {
         title: 'How far people get',
-        section: 'events',
-        look: 'section-view for each section, in page order.',
+        section: 'funnels',
+        look: 'Your saved funnels, such as Visit → CV section → CV download and Visit → Contact section → contact click.',
         why: 'Sections low on the page only help if people reach them.',
         read: 'A big fall between two sections means the first one loses people. If contact falls far below the top section, make the way to contact you easier to reach.',
       },
@@ -74,7 +74,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         section: 'events',
         look: 'website-download-click, compared with visitors for the same period.',
         why: 'This is the one result the page exists for.',
-        read: 'Treat this as interest, not installs: the stats stop at the click, and the app itself sends nothing.',
+        read: 'Treat this as interest, not installs: a click doesn’t prove someone installed the app.',
       },
       {
         title: 'Did the demo convince them?',
@@ -110,7 +110,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         href: '/admin/newsletter',
         look: 'New subscribers, and whether the total keeps rising.',
         why: 'A subscriber is the one reader you can reach again without them remembering you.',
-        read: 'Compare with the Engagement page: if subscribe attempts rise but subscribers don’t, the confirmation step is losing people.',
+        read: 'Check the Newsletter sign-up funnel too: if people start but the Newsletter confirmed goal doesn’t rise, the confirmation step is losing them.',
       },
       {
         title: 'Which pages hold attention',
@@ -149,11 +149,11 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'Pages with long active time are real needs. Use them to choose what to improve and what to write about.',
       },
       {
-        title: 'From arriving to using a tool',
+        title: 'From tool to feedback',
         section: 'funnels',
-        look: 'Your saved funnel, from landing to using a tool.',
-        why: 'It shows where people give up before they get any help.',
-        read: 'Improve the step with the biggest drop first. If people reach a tool but don’t submit, the form may ask too much.',
+        look: 'Your saved funnel, Tool to AI feedback, and the Notebook opened goal.',
+        why: 'It shows whether people who open a tool get any help from it.',
+        read: 'Improve the step with the biggest drop first. If people open a tool but don’t reach feedback, the form may ask too much.',
       },
       {
         title: 'Where people go next',
@@ -163,7 +163,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'Link tools that people already use one after another.',
       },
     ],
-    note: `${NO_CAMPAIGN_TAGS} Please read this site in totals only. Its visitors may be dealing with job loss, so avoid going through individual sessions: the privacy page says no personal profile is built.`,
+    note: `${NO_CAMPAIGN_TAGS} Hardly anyone had visited by November 2026, so these steps become useful once people arrive. Please read this site in totals only. Its visitors may be dealing with job loss, so avoid going through individual sessions: the privacy page says no personal profile is built.`,
   },
   'e46b4df8-dbd1-46c3-ba7a-72f3465d7600': {
     name: 'AI Bubble Tracker',
@@ -178,8 +178,8 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
       },
       {
         title: 'Do people go deeper?',
-        section: 'engagement',
-        look: 'Pages: attention, not just views, for Overview, Data, Deep Dive, Forecasts and Summary.',
+        section: 'funnels',
+        look: 'Your saved funnel, Overview to deep dive, and the Deep dive viewed goal.',
         why: 'Going past the first page shows real interest in the data.',
         read: 'If nearly everyone stays on Overview, make the way to the deeper pages clearer.',
       },
@@ -206,11 +206,11 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
     goal: 'Paste a website, get a go-to-market plan. It works when someone gets a report and finds it worth keeping or sharing.',
     steps: [
       {
-        title: 'From visit to report',
+        title: 'From analysis to posts',
         section: 'funnels',
-        look: 'Your saved funnel, from the landing page to a finished analysis.',
-        why: 'The report is the moment the product proves itself.',
-        read: 'A drop before analysis means the promise isn’t landing. A drop during it points to waiting or failures.',
+        look: 'Your saved funnel, Analysis to posts, and the Topics reached goal.',
+        why: 'It shows whether people go on to use the plan once they have it.',
+        read: 'A drop right after the analysis means the report isn’t leading anywhere. If the analysis itself fails, see the next step.',
       },
       {
         title: 'Does the analysis finish?',
@@ -234,7 +234,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'Put the most-used modules first, and rethink the ones nobody opens.',
       },
     ],
-    note: NO_CAMPAIGN_TAGS,
+    note: `${NO_CAMPAIGN_TAGS} Hardly anyone had visited by November 2026, so these steps become useful once people arrive.`,
   },
   '6430db90-7aa9-4807-83fe-105910e64408': {
     name: 'FinLit',
@@ -269,7 +269,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'If most visits are on phones, test calculators and simulations there first.',
       },
     ],
-    note: NO_CAMPAIGN_TAGS,
+    note: `${NO_CAMPAIGN_TAGS} Nobody had visited by November 2026, so these steps become useful once people arrive. Your saved Learn to check-up funnel then shows whether lessons lead on to the check-up.`,
   },
   '84f1adb9-722b-402c-a956-58eb974ba156': {
     name: 'Go Dojo',
@@ -284,10 +284,10 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
       },
       {
         title: 'Do they start playing?',
-        section: 'engagement',
-        look: 'Pages: attention, not just views, for /learn, /practice and /play.',
+        section: 'funnels',
+        look: 'Your saved funnel, Home → learn → practice, and the Played a game goal.',
         why: 'Learning here comes from doing, not reading.',
-        read: 'If visitors stay on /about or /heritage but not /learn, make the first lesson easier to reach.',
+        read: 'If many open lessons but few practise or play, make that next step more obvious.',
       },
       {
         title: 'Do they come back?',
@@ -297,11 +297,11 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'Watch for improvement over time. Compare it after any change to practice.',
       },
       {
-        title: 'Is the board confusing?',
+        title: 'Is anything broken or confusing?',
         section: 'engagement',
-        look: 'Friction: rage clicks on lesson and play pages.',
+        look: 'Friction: JavaScript errors, then rage clicks on lesson and play pages.',
         why: 'Repeated clicks on the board can mean a move isn’t accepted and people don’t know why.',
-        read: 'Clusters on one lesson point to unclear feedback. Open the Heatmaps to see where.',
+        read: 'This site has recorded repeated errors, so look at those first. Rage clicks clustered on one lesson point to unclear feedback.',
       },
     ],
     note: NO_CAMPAIGN_TAGS,
@@ -318,11 +318,11 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         read: 'This is the main number here. A long first visit with no return means interest, not a habit.',
       },
       {
-        title: 'From assessment to practice',
-        section: 'journeys',
-        look: 'Paths from Assessment to Learn, modules, Practice and Journal.',
+        title: 'From learning to practice',
+        section: 'funnels',
+        look: 'Your saved funnel, Home → learn → practice, and the Used journal goal.',
         why: 'The value is in practice, so people need to reach it.',
-        read: 'If most stop after Assessment, link clearly from the result to one first exercise.',
+        read: 'If most stop before practice, link clearly to one first exercise.',
       },
       {
         title: 'Which parts get used',
@@ -350,7 +350,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
         section: 'events',
         look: 'filter-change and chart-click, compared with visits.',
         why: 'A dashboard earns its place when people ask it their own questions.',
-        read: 'Compare with version 2 over the same dates: open both and note actions per visit.',
+        read: 'Compare with version 2 over the same dates, using actions per visit. By November 2026 this version had shown none of these, but with so few visitors that proves little.',
       },
       {
         title: 'Which views matter',
@@ -383,7 +383,7 @@ export const SITE_GUIDES: Record<string, SiteGuide> = {
       {
         title: 'Against version 1',
         section: 'events',
-        look: 'filter-change and chart-click per visit, for the same dates on both sites.',
+        look: 'filter-change and chart-click per visit for the same dates on both sites, plus the Visit → filter → chart drill-down funnel.',
         why: 'The data is the same, so a difference points to the design.',
         read: 'Use actions per visit, not totals, because either site may have been shared more widely.',
       },
@@ -462,7 +462,7 @@ export const MUSEUMHOP_READING: SiteGuide = {
       title: 'Before the night: are people getting to a plan?',
       look: 'Groups with a real plan in Planner: nights and people, then From visit to a planned night.',
       why: 'Visitors alone say little. A group with a plan is what the app is for.',
-      read: 'Find the biggest drop in the funnel and work on that step only. If many people look but few enter a night, the first step needs to be clearer. If many enter but few add stops, they aren’t sure what to do next.',
+      read: 'Find the biggest drop in the funnel and work on that step only. The last three steps can happen in any order, so a later one can be higher: judge the drops up to In a night. If many people look but few enter a night, the first step needs to be clearer. If many enter but few add stops, they aren’t sure what to do next.',
     },
     {
       title: 'Before the night: is it spreading?',
@@ -480,7 +480,7 @@ export const MUSEUMHOP_READING: SiteGuide = {
       title: 'On the night: is it working?',
       look: 'Problems on this page, then Realtime on the website page.',
       why: 'Fixing what is broken matters more than learning anything new. Avoid new features on the day.',
-      read: 'Act on an error that repeats or grows, and ignore one-offs. The website’s Engagement page also shows failed saves.',
+      read: 'Act on an error that repeats or grows, and ignore one-offs. ResizeObserver messages are usually harmless, and Script error hides its real cause. The website’s Engagement page also shows failed saves.',
       href: `/websites/${MUSEUMHOP_ID}/realtime`,
     },
     {
