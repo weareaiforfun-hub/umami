@@ -5,7 +5,9 @@ import { LoadingPanel } from '@/components/common/LoadingPanel';
 import { PageGuide } from '@/components/common/PageGuide';
 import { PageHeader } from '@/components/common/PageHeader';
 import { Panel } from '@/components/common/Panel';
+import { ReadingGuide } from '@/components/common/SiteGuide';
 import { useApi } from '@/components/hooks';
+import { MUSEUMHOP_READING } from '@/lib/site-guides';
 import type { MuseumHopUsage } from '@/queries/sql/getMuseumHopUsage';
 
 // MuseumHop (museumhop.arian-shafa.xyz, a Museumnacht Amsterdam planner) and its old address
@@ -295,6 +297,7 @@ export function AdminMuseumHopPage() {
           ))}
         </Row>
       </PageHeader>
+      <ReadingGuide guide={MUSEUMHOP_READING} title="What to look at, and how to read it" />
       <PageGuide />
 
       <LoadingPanel data={data} error={error} isLoading={isLoading}>
@@ -448,6 +451,7 @@ export function AdminMuseumHopPage() {
 /** Nights, groups, reactions and routes, all time, from MuseumHop's own database. */
 function Planner({ p }: { p: Planner }) {
   const t = p.totals;
+  const realPlans = p.nights.filter(n => n.members >= 2 && n.shared_stops >= 2).length;
   return (
     <>
       <Section
@@ -459,6 +463,11 @@ function Planner({ p }: { p: Planner }) {
             label="Nights"
             value={t.nights}
             note={`${t.group_nights} with friends · ${t.solo_nights} solo`}
+          />
+          <Stat
+            label="Groups with a real plan"
+            value={realPlans}
+            note={`of ${t.nights} nights: 2+ people, 2+ stops on the group route`}
           />
           <Stat label="People" value={t.people} note={`average group ${t.avg_group_size ?? '—'}`} />
           <Stat
