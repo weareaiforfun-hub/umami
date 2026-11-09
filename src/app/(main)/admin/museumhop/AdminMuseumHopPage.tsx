@@ -39,11 +39,30 @@ interface Planner {
     hours_to_second_member: N | null;
   }[];
 }
+interface Wishes {
+  generated_at: string;
+  total: N;
+  with_text: N;
+  with_email: N;
+  last_7d: N;
+  by_event: Record<string, N>;
+  recent: { at: string; events: string[]; wish: string; email: string | null; source: string }[];
+}
 interface Data {
   days: N;
   usage: MuseumHopUsage;
   planner: { configured: boolean; error?: string; report?: Planner };
+  wishes?: { configured: boolean; error?: string; report?: Wishes };
 }
+
+// The wish box's event chips (MuseumHop src/components/whats-next.tsx).
+const WISH_EVENTS: Record<string, string> = {
+  idfa: 'IDFA',
+  ade: 'ADE',
+  kingsday: 'King’s Day',
+  monumentendag: 'Open Monumentendag',
+  other: 'Something else',
+};
 
 const HOP = 'museumhop.arian-shafa.xyz';
 const HOPPER = 'museumhopper.arian-shafa.xyz';
@@ -431,6 +450,14 @@ export function AdminMuseumHopPage() {
               </Section>
             )}
 
+            {data.wishes?.report ? (
+              <WishList w={data.wishes.report} />
+            ) : (
+              <Section title="Wishes: what to build next">
+                <Empty>{data.wishes?.error ?? 'Not connected yet.'}</Empty>
+              </Section>
+            )}
+
             <Section
               title="Problems"
               description="Things that went wrong in visitors’ browsers (MuseumHop, this period). Many come from their extensions, not the app."
@@ -445,6 +472,46 @@ export function AdminMuseumHopPage() {
         )}
       </LoadingPanel>
     </Column>
+  );
+}
+
+/** The wish box in MuseumHop's "what's next" pop-up: which events people want a planner for, and what they wrote. */
+function WishList({ w }: { w: Wishes }) {
+  const events = Object.entries(w.by_event)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k, v]) => ({ label: WISH_EVENTS[k] ?? k, value: v, note: 'wishes' }));
+  return (
+    <Section
+      title="Wishes: what to build next"
+      description={`All time, from the “What should I build next?” box · updated ${fmtDate(w.generated_at)}. Private: only admins see this. Wishes are deleted after a year.`}
+    >
+      <Row gap="6" wrap="wrap">
+        <Stat label="Wishes" value={w.total} note={`${w.last_7d} in the last 7 days`} />
+        <Stat label="With a written wish" value={w.with_text} />
+        <Stat label="Left an email" value={w.with_email} note="they’d like a reply" />
+      </Row>
+      {events.length ? <Bars rows={events} /> : <Empty>No wishes yet.</Empty>}
+      {w.recent.length > 0 && (
+        <Column gap="3">
+          <Text weight="bold">Latest wishes</Text>
+          {w.recent.map((r, i) => (
+            <Column
+              key={i}
+              gap="1"
+              paddingY="2"
+              style={{ borderTop: '1px solid var(--base-color-200, #eee)' }}
+            >
+              <Text size="1" color="muted">
+                {fmtDate(r.at)}
+                {r.events.length ? ` · ${r.events.map(e => WISH_EVENTS[e] ?? e).join(', ')}` : ''}
+                {r.email ? ` · ${r.email}` : ''}
+              </Text>
+              {r.wish && <Text>{r.wish}</Text>}
+            </Column>
+          ))}
+        </Column>
+      )}
+    </Section>
   );
 }
 
