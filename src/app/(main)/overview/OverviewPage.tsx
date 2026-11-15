@@ -47,7 +47,6 @@ const ratio = (a: N, b: N) => (b ? a / b : 0);
 
 const avgTime = (t: SiteTotals) => ratio(t.totaltime, t.visits);
 const bounceRate = (t: SiteTotals) => ratio(t.bounces, t.visits);
-const viewsPerVisit = (t: SiteTotals) => ratio(t.views, t.visits);
 
 const sum = (sites: SiteOverview[], key: 'current' | 'previous'): SiteTotals =>
   sites.reduce(
@@ -241,16 +240,7 @@ function TrendChart({ data }: { data: Data }) {
   );
 }
 
-type SortKey =
-  | 'name'
-  | 'visitors'
-  | 'change'
-  | 'visits'
-  | 'views'
-  | 'vpv'
-  | 'bounce'
-  | 'time'
-  | 'lastSeen';
+type SortKey = 'name' | 'visitors' | 'change' | 'visits' | 'views' | 'bounce' | 'time' | 'lastSeen';
 
 const sortValue: Record<SortKey, (s: SiteOverview) => N | string> = {
   name: s => s.name.toLowerCase(),
@@ -258,7 +248,6 @@ const sortValue: Record<SortKey, (s: SiteOverview) => N | string> = {
   change: s => s.current.visitors - s.previous.visitors,
   visits: s => s.current.visits,
   views: s => s.current.views,
-  vpv: s => viewsPerVisit(s.current),
   bounce: s => bounceRate(s.current),
   time: s => avgTime(s.current),
   lastSeen: s => (s.lastSeen ? Date.parse(s.lastSeen) : 0),
@@ -481,9 +470,6 @@ export function OverviewPage() {
                           <Th id="views" sort={sort} setSort={setSort}>
                             Views
                           </Th>
-                          <Th id="vpv" sort={sort} setSort={setSort} title="Views per visit">
-                            Views / visit
-                          </Th>
                           <Th
                             id="bounce"
                             sort={sort}
@@ -571,9 +557,6 @@ export function OverviewPage() {
                                 </div>
                               </td>
                               <td className={styles.numCell}>
-                                {c.visits ? viewsPerVisit(c).toFixed(1) : '—'}
-                              </td>
-                              <td className={styles.numCell}>
                                 {c.visits ? pct(bounceRate(c)) : '—'}
                               </td>
                               <td className={styles.numCell}>
@@ -612,9 +595,6 @@ export function OverviewPage() {
                           </td>
                           <td className={styles.numCell}>{fmt(now.visits)}</td>
                           <td className={styles.numCell}>{fmt(now.views)}</td>
-                          <td className={styles.numCell}>
-                            {now.visits ? viewsPerVisit(now).toFixed(1) : '—'}
-                          </td>
                           <td className={styles.numCell}>
                             {now.visits ? pct(bounceRate(now)) : '—'}
                           </td>
