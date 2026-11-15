@@ -40,6 +40,9 @@ const fmtTime = (s: N) =>
       ? `${Math.round(s)}s`
       : `${Math.floor(s / 60)}m ${String(Math.round(s % 60)).padStart(2, '0')}s`;
 const pct = (n: N) => `${Math.round(n * 100)}%`;
+const share = (part: N, whole: N) =>
+  !whole || !part ? '' : part / whole < 0.005 ? '<1%' : pct(part / whole);
+const people = (n: N) => `${n.toLocaleString()} ${n === 1 ? 'visitor' : 'visitors'}`;
 const ratio = (a: N, b: N) => (b ? a / b : 0);
 
 const avgTime = (t: SiteTotals) => ratio(t.totaltime, t.visits);
@@ -544,7 +547,7 @@ export function OverviewPage() {
                                     />
                                   </span>
                                   <span className={styles.share}>
-                                    {now.visitors ? pct(ratio(c.visitors, now.visitors)) : ''}
+                                    {share(c.visitors, now.visitors)}
                                   </span>
                                 </div>
                               </td>
@@ -583,12 +586,12 @@ export function OverviewPage() {
                                   unit={data.unit}
                                 />
                               </td>
-                              <td className={styles.ref}>
+                              <td className={styles.ref} title={s.topReferrer?.domain}>
                                 {s.topReferrer ? (
                                   <>
                                     {s.topReferrer.domain}
                                     <div className={styles.sub}>
-                                      {fmt(s.topReferrer.visitors)} visitors
+                                      {people(s.topReferrer.visitors)}
                                     </div>
                                   </>
                                 ) : (
