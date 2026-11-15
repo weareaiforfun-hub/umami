@@ -3,7 +3,7 @@ import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
 import { IconLabel } from '@/components/common/IconLabel';
 import Link from '@/components/common/Link';
 import { useMessages, useNavigation } from '@/components/hooks';
-import { Globe, Grid2x2, LayoutDashboard, LinkIcon } from '@/components/icons';
+import { Gauge, Globe, Grid2x2, LayoutDashboard, LinkIcon } from '@/components/icons';
 import { MobileMenuButton } from '@/components/input/MobileMenuButton';
 import { UserButton } from '@/components/input/UserButton';
 import { Logo } from '@/components/svg';
@@ -18,6 +18,12 @@ export function MobileNav() {
   const isMain = !websiteId && !isAdmin && !isSettings;
 
   const links = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      path: '/overview',
+      icon: <Gauge />,
+    },
     {
       id: 'boards',
       label: t(labels.boards),

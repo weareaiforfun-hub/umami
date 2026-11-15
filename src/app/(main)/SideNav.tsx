@@ -17,6 +17,7 @@ import { OverlayScrollArea } from '@/components/common/OverlayScrollArea';
 import styles from '@/components/common/OverlayScrollArea.module.css';
 import { useGlobalState, useMessages, useNavigation } from '@/components/hooks';
 import {
+  Gauge,
   Globe,
   Grid2x2,
   LayoutDashboard,
@@ -35,6 +36,12 @@ export function SideNav(props: any) {
   const links = [
     ...(!teamId
       ? [
+          {
+            id: 'overview',
+            label: 'Overview',
+            path: '/overview',
+            icon: <Gauge />,
+          },
           {
             id: 'dashboard',
             label: t(labels.dashboard),

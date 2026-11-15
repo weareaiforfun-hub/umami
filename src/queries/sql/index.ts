@@ -67,3 +67,4 @@ export * from './sessions/saveSessionLink';
 export * from './sessions/updateSession';
 export * from './utm/getUTM';
 export * from './getMuseumHopUsage';
+export * from './getSitesOverview';
